@@ -1,0 +1,17 @@
+{
+    "name": "Pokedex PWA",
+    "short_name": "Pokedex",
+    "theme_color": "#7AC74C",
+    "background_color": "#fff",
+    "display": "standalone",
+    "scope": ".",
+    "start_url": "index.html",
+    "icons": [
+      {
+      "src": "app/imgs/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+      }
+    ],
+    "splash_pages": null
+  }

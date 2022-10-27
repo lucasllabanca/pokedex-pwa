@@ -41,11 +41,26 @@ async function createPokemon(number) {
     return div;
 }
 
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        const onsuccess = () => console.log('[Service Worker] Registered');
+        const onerror = () => console.log('[Service Worker] Registration failed:');
+        
+        navigator.serviceWorker
+        .register('../../sw.js')
+        .then(onsuccess)
+        .catch(onerror);
+    }
+}
+
 async function onInit() {
+
+    registerServiceWorker();
+
     const pokedex = document.getElementById('pokedex');
     const pokemonNumbers = Array.from(new Array(151), (x, i) => i + 1);
-    for (let number of pokemonNumbers)
-        pokedex.appendChild(await createPokemon(number));
+    //for (let number of pokemonNumbers)
+        //pokedex.appendChild(await createPokemon(number));
 }
 
 onInit();
