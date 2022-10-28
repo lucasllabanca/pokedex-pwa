@@ -1,38 +1,95 @@
-import {Cache} from './cache.js';
+import {IndexedDB} from './indexeddb.js';
 
-const CACHE_KEY = 'poke-cache-v1';
-const cache = new Cache(CACHE_KEY);
+const POKE_API = 'https://pokeapi.co/api/v2/pokemon/';
+const POKE_NUMBER = 'number';
+const POKE_NAME = 'name';
+const POKE_IMG = 'image';
+const pokemonDb = new IndexedDB('pokemonDB', 'pokemon', 1, `++id, ${POKE_NUMBER}, ${POKE_NAME}, ${POKE_IMG}, data`);
 
 async function fetchFromNetwork(requestUrl) {
-    console.log('from network');
+    console.log('from network:', requestUrl);
     const response = await fetch(requestUrl);
-    await cache.addToCache(requestUrl, response.clone());
     return response;
 }
 
-async function getPokemonByNumber(number) {
-    const requestUrl = `https://pokeapi.co/api/v2/pokemon/${number}`
-    const response = (await cache.fetchFromCache(requestUrl) || await fetchFromNetwork(requestUrl));
-    return await response.json();
+async function fetchImageAndReturnAsBlob(imageUrl) {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    return blob;
 }
 
-async function createPokemon(number) {
+async function getFromDbOrFetchByNumber(number) {
 
-    const pokemon = await getPokemonByNumber(number);
+    var pokemon = await pokemonDb.getByProperty(POKE_NUMBER, number);
+
+    if (pokemon && pokemon.length !== 0) return pokemon[0];
+
+    const requestUrl = `${POKE_API}${number}`;
+    const response = await fetchFromNetwork(requestUrl);
+    pokemon = await response.json();
+
+    if (pokemon) {
+        console.log(`Pokemon added to db: ${number}`);
+
+        pokemon = {
+            [POKE_NUMBER]: number,
+            [POKE_NAME]: pokemon.name,
+            [POKE_IMG]: await fetchImageAndReturnAsBlob(pokemon.sprites.front_default),
+            data: pokemon
+        }
+
+        await pokemonDb.add(pokemon);
+
+        return pokemon;
+    }
+
+    return null;
+}
+
+function createPokemonNotFound(number) {
     const div = document.createElement('div');
     const header = document.createElement('header');
     const footer = document.createElement('footer');
     const h2 = document.createElement('h2');
     const img = document.createElement('img');
     const span = document.createElement('span');
-    div.className = `card ${pokemon.types[0].type.name}`;
+    div.className = 'card notFound';
+    h2.innerText = `#${number}`;
+    img.src = '../imgs/icon-256x256.png';
+    img.alt = number;
+    img.title = number;
+    footer.className = 'notFound';
+    span.innerText = number;
+    header.appendChild(h2);
+    footer.appendChild(span);
+    div.appendChild(header);
+    div.appendChild(img);
+    div.appendChild(footer);
+    return div;
+}
+
+async function createPokemon(number) {
+
+    const pokemon = await getFromDbOrFetchByNumber(number);
+
+    if (!pokemon) return createPokemonNotFound(number);
+
+    const pokemonData = pokemon.data;
+
+    const div = document.createElement('div');
+    const header = document.createElement('header');
+    const footer = document.createElement('footer');
+    const h2 = document.createElement('h2');
+    const img = document.createElement('img');
+    const span = document.createElement('span');
+    div.className = `card ${pokemonData.types[0].type.name}`;
     //div.setAttribute("onclick",`abrirStripes(${number});`);
-    h2.innerText = `#${pokemon.order}`;
-    img.src = pokemon.sprites.front_default;
-    img.alt = pokemon.name;
-    img.title = pokemon.name;
-    footer.className = pokemon.types[0].type.name;
-    span.innerText = pokemon.name;
+    h2.innerText = `#${pokemonData.order}`;
+    img.src = URL.createObjectURL(pokemon[POKE_IMG]);
+    img.alt = pokemonData.name;
+    img.title = pokemonData.name;
+    footer.className = pokemonData.types[0].type.name;
+    span.innerText = pokemonData.name;
     header.appendChild(h2);
     footer.appendChild(span);
     div.appendChild(header);
@@ -58,9 +115,9 @@ async function onInit() {
     registerServiceWorker();
 
     const pokedex = document.getElementById('pokedex');
-    const pokemonNumbers = Array.from(new Array(151), (x, i) => i + 1);
-    //for (let number of pokemonNumbers)
-        //pokedex.appendChild(await createPokemon(number));
+    const pokemonNumbers = Array.from(new Array(10), (x, i) => i + 1);
+    for (let number of pokemonNumbers)
+        pokedex.appendChild(await createPokemon(number));
 }
 
 onInit();
