@@ -10,9 +10,6 @@
 }
 
 h1 {
-    font-size: 100px;
-    line-height: 100px;
-    font-weight: 1000;
     text-align: center;
 }
 
@@ -60,7 +57,6 @@ h1 {
     flex-direction: column;
     align-items: flex-start;
     width: 288px;
-    height: 256px;
     background: white;
 }
 

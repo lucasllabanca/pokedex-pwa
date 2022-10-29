@@ -34,7 +34,7 @@ async function getFromDbOrFetchByNumber(number) {
         pokemon = {
             [POKE_NUMBER]: number,
             [POKE_NAME]: pokemon.name,
-            [POKE_IMG]: await fetchImageAndReturnAsBlob(pokemon.sprites.front_default),
+            [POKE_IMG]: await fetchImageAndReturnAsBlob(pokemon.sprites.other['official-artwork'].front_default),
             data: pokemon
         }
 
@@ -88,6 +88,7 @@ async function createPokemon(number) {
     img.src = URL.createObjectURL(pokemon[POKE_IMG]);
     img.alt = pokemonData.name;
     img.title = pokemonData.name;
+    img.loading = 'lazy';
     footer.className = pokemonData.types[0].type.name;
     span.innerText = pokemonData.name;
     header.appendChild(h2);
