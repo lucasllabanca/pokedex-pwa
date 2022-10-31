@@ -13,6 +13,17 @@ const assetsToCache = [
     '/'
 ];
 
+function removeOldCache(key) {
+    //if (key === STATIC_ASSETS_KEY) return;
+    console.log(`[Service Worker] Removing old cache: ${key}`);
+    return caches.delete(key);
+}
+
+async function cacheCleanup() {
+    const keys = await caches.keys();
+    return Promise.all(keys.map(removeOldCache));
+}
+
 async function cacheStaticAssets() {
     const cache = await caches.open(STATIC_ASSETS_KEY);
     return cache.addAll(assetsToCache);
@@ -42,8 +53,9 @@ self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
 
-self.addEventListener('activate', () => {
-    console.log('[Service Worker] Activating service worker!');
+self.addEventListener('activate', (event) => {
+    console.log('[Service Worker] Activating service worker!', event);
+    event.waitUntil(cacheCleanup());
     return self.clients.claim();
 });
 
