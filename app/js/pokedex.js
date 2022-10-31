@@ -84,7 +84,7 @@ async function createPokemon(number) {
     const span = document.createElement('span');
     div.className = `card ${pokemonData.types[0].type.name}`;
     //div.setAttribute("onclick",`abrirStripes(${number});`);
-    h2.innerText = `#${pokemonData.order}`;
+    h2.innerText = `#${pokemonData.id}`;
     img.src = URL.createObjectURL(pokemon[POKE_IMG]);
     img.alt = pokemonData.name;
     img.title = pokemonData.name;
@@ -97,6 +97,10 @@ async function createPokemon(number) {
     div.appendChild(img);
     div.appendChild(footer);
     return div;
+}
+
+function findPokemon(input) {
+    console.log(input);
 }
 
 function registerServiceWorker() {
@@ -112,11 +116,10 @@ function registerServiceWorker() {
 }
 
 async function onInit() {
-
     registerServiceWorker();
 
     const pokedex = document.getElementById('pokedex');
-    const pokemonNumbers = Array.from(new Array(10), (x, i) => i + 1);
+    const pokemonNumbers = Array.from(new Array(25), (x, i) => i + 1);
     for (let number of pokemonNumbers)
         pokedex.appendChild(await createPokemon(number));
 }

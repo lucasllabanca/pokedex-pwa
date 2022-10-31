@@ -12,7 +12,12 @@
     <title>Pokédex PWA</title>
 </head>
 <body>
-    <h1>Pokédex</h1>
+
+    <div class="banner">
+        <img src="app/imgs/icon-256x256.png" alt="Pokéball">
+        <span>Pokédex</span>
+    </div>
+    <input type="search" placeholder="Find by number or name" onkeypress="findPokemon(this)">
     <div id="pokedex" class="pokedex"></div>
 </body>
 </html>

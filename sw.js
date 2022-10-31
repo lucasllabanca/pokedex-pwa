@@ -9,6 +9,8 @@ const assetsToCache = [
     'app/js/pokedex.js',
     'app/js/pokemon.js',
     'app/imgs/favicon.ico',
+    'app/imgs/icon-256x256.png',
+    'app/imgs/search.svg',
     'index.html',
     '/'
 ];
