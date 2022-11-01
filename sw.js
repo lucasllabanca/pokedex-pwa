@@ -50,19 +50,19 @@ async function fetchCacheFirst(request) {
 }
 
 self.addEventListener('install', (event) => {
-    console.log('[Service Worker] installing service worker');
+    //console.log('[Service Worker] installing service worker');
     event.waitUntil(cacheStaticAssets());
     self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-    console.log('[Service Worker] Activating service worker!', event);
+    //console.log('[Service Worker] Activating service worker!', event);
     event.waitUntil(cacheCleanup());
     return self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
     if (event.request.method != 'GET') return;
-    console.log('[Service Worker] Fetch event worker', event.request.url);
+    //console.log('[Service Worker] Fetch event worker', event.request.url);
     event.respondWith(fetchCacheFirst(event.request));
 });

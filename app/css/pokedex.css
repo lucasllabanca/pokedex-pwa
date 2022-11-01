@@ -105,10 +105,13 @@ a:hover {
 
 input[type="search"] {
     width: 244px;
-    height: 40px;
+    height: 54px;
     margin: auto;
     margin-bottom: 1rem;
-    border: 1px solid #000;
+    border: 2px solid #e64c3c;
+    color: #e64c3c;
+    font-size: 14px;
+    font-weight: 600;
     display: block;
     padding: 9px 4px 9px 40px;
     border-radius: 14px;
@@ -117,7 +120,6 @@ input[type="search"] {
 
 input[type="search"]:focus {
     box-shadow: 0 0 3px 0 #e64c3c;
-    border-color: #e64c3c;
     outline: none;
 }
 

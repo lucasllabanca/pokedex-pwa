@@ -7,8 +7,13 @@ const POKE_NAME = 'name';
 const POKE_IMG = 'image';
 const pokemonDb = new IndexedDB('pokemonDB', 'pokemon', 1, `++id, ${POKE_NUMBER}, ${POKE_NAME}, ${POKE_IMG}, data`);
 
+const searchInput = document.getElementById('search');
+searchInput.addEventListener('keyup', () => {
+    findPokemon(searchInput);
+});
+
 async function fetchFromNetwork(requestUrl) {
-    console.log('from network:', requestUrl);
+    //console.log('from network:', requestUrl);
     const response = await fetch(requestUrl);
     return response;
 }
@@ -109,8 +114,8 @@ async function createPokemon(number) {
     return div;
 }
 
-function findPokemon(input) {
-    console.log(input);
+function findPokemon(searchInput) {
+    //console.log(searchInput.value);
 }
 
 function registerServiceWorker() {
