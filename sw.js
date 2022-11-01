@@ -1,4 +1,4 @@
-const STATIC_ASSETS_KEY = 'app-pokedex-v1';
+const STATIC_ASSETS_KEY = 'app-pokedex-v2';
 
 const assetsToCache = [
     'https://cdn.jsdelivr.net/npm/dexie@3.0.3/dist/dexie.mjs',
@@ -16,7 +16,7 @@ const assetsToCache = [
 ];
 
 function removeOldCache(key) {
-    //if (key === STATIC_ASSETS_KEY) return;
+    if (key === STATIC_ASSETS_KEY) return;
     console.log(`[Service Worker] Removing old cache: ${key}`);
     return caches.delete(key);
 }
