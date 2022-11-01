@@ -60,6 +60,7 @@ h1 {
 .card footer {
     align-self: stretch;
     border-radius: 0 0 10px 10px;
+    outline: 1px solid;
 }
 
 .card footer > span {
