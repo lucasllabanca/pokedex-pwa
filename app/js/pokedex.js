@@ -1,5 +1,6 @@
 import {IndexedDB} from './indexeddb.js';
 
+const pokemonProperties = ['base_experience','height','id','name','order','stats','types','weight'];
 const POKE_API = 'https://pokeapi.co/api/v2/pokemon/';
 const POKE_NUMBER = 'number';
 const POKE_NAME = 'name';
@@ -18,6 +19,13 @@ async function fetchImageAndReturnAsBlob(imageUrl) {
     return blob;
 }
 
+function getNewPokemonReduced(pokemon) {
+    return Object.keys(pokemon).reduce((object, key) => {
+        if (pokemonProperties.includes(key)) object[key] = pokemon[key];
+        return object;
+      }, {})
+}
+
 async function getFromDbOrFetchByNumber(number) {
 
     var pokemon = await pokemonDb.getByProperty(POKE_NUMBER, number);
@@ -31,11 +39,13 @@ async function getFromDbOrFetchByNumber(number) {
     if (pokemon) {
         console.log(`Pokemon added to db: ${number}`);
 
+        const pokemonReduced = getNewPokemonReduced(pokemon);
+
         pokemon = {
             [POKE_NUMBER]: number,
             [POKE_NAME]: pokemon.name,
             [POKE_IMG]: await fetchImageAndReturnAsBlob(pokemon.sprites.other['official-artwork'].front_default),
-            data: pokemon
+            data: pokemonReduced
         }
 
         await pokemonDb.add(pokemon);
