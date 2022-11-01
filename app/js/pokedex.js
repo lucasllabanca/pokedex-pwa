@@ -61,7 +61,7 @@ async function getFromDbOrFetchByNumber(number) {
     return null;
 }
 
-function createPokemonNotFound(number) {
+function createPokemonCardNotFound() {
     const div = document.createElement('div');
     const header = document.createElement('header');
     const footer = document.createElement('footer');
@@ -69,12 +69,10 @@ function createPokemonNotFound(number) {
     const img = document.createElement('img');
     const span = document.createElement('span');
     div.className = 'card notFound';
-    h2.innerText = `#${number}`;
+    h2.innerText = '#';
     img.src = '../imgs/icon-256x256.png';
-    img.alt = number;
-    img.title = number;
     footer.className = 'notFound';
-    span.innerText = number;
+    span.innerText = 'Not Found';
     header.appendChild(h2);
     footer.appendChild(span);
     div.appendChild(header);
@@ -87,25 +85,27 @@ async function createPokemon(number) {
 
     const pokemon = await getFromDbOrFetchByNumber(number);
 
-    if (!pokemon) return createPokemonNotFound(number);
+    if (!pokemon) return createPokemonCardNotFound();
 
-    const pokemonData = pokemon.data;
+    return createPokemonCard(pokemon);
+}
 
+function createPokemonCard(pokemon) {
     const div = document.createElement('div');
     const header = document.createElement('header');
     const footer = document.createElement('footer');
     const h2 = document.createElement('h2');
     const img = document.createElement('img');
     const span = document.createElement('span');
-    div.className = `card ${pokemonData.types[0].type.name}`;
+    div.className = `card ${pokemon.data.types[0].type.name}`;
     //div.setAttribute("onclick",`abrirStripes(${number});`);
-    h2.innerText = `#${pokemonData.id}`;
+    h2.innerText = `#${pokemon[POKE_NUMBER]}`;
     img.src = URL.createObjectURL(pokemon[POKE_IMG]);
-    img.alt = pokemonData.name;
-    img.title = pokemonData.name;
+    img.alt = pokemon[POKE_NAME];
+    img.title = pokemon[POKE_NAME];
     img.loading = 'lazy';
-    footer.className = pokemonData.types[0].type.name;
-    span.innerText = pokemonData.name;
+    footer.className = pokemon.data.types[0].type.name;
+    span.innerText = pokemon[POKE_NAME];
     header.appendChild(h2);
     footer.appendChild(span);
     div.appendChild(header);
@@ -114,8 +114,25 @@ async function createPokemon(number) {
     return div;
 }
 
-function findPokemon(searchInput) {
-    //console.log(searchInput.value);
+function filterByNumberOrName(pokemon, char) {
+    return pokemon[POKE_NAME].includes(char);
+}
+
+async function findPokemon(search) {
+
+    const pokemonList = await pokemonDb.getAll();
+    let pokemonsFiltered = pokemonList;
+    
+    if (search.value.length !== 0)
+        pokemonsFiltered = pokemonList.filter((pokemon) => { return filterByNumberOrName(pokemon, search.value); });
+
+    const pokedex = document.getElementById('pokedex');
+    pokedex.innerHTML = '';
+
+    if (pokemonsFiltered && pokemonsFiltered.length !== 0)
+        pokemonsFiltered.forEach((pokemon) => { pokedex.appendChild(createPokemonCard(pokemon)); });
+    else
+        pokedex.appendChild(createPokemonCardNotFound());
 }
 
 function registerServiceWorker() {
