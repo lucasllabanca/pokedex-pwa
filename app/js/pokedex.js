@@ -1,24 +1,29 @@
-import {IndexedDB} from './indexeddb.js';
+import {IndexedDB, checkIfDatabaseExists} from './indexeddb.js';
 
-const pokemonProperties = ['base_experience','height','id','name','order','stats','types','weight'];
 const POKE_API = 'https://pokeapi.co/api/v2/pokemon/';
 const POKE_NUMBER = 'number';
 const POKE_NAME = 'name';
 const POKE_IMG = 'image';
-const pokemonDb = new IndexedDB('pokemonDB', 'pokemon', 1, `++id, ${POKE_NUMBER}, ${POKE_NAME}, ${POKE_IMG}, data`);
+var pokemonDb = null;
 
 const searchInput = document.getElementById('search');
+
 searchInput.addEventListener('keyup', () => {
     findPokemon(searchInput.value);
 });
+
 searchInput.addEventListener('search', () => {
     findPokemon(searchInput.value);
 });
 
-async function fetchFromNetwork(requestUrl) {
-    //console.log('from network:', requestUrl);
-    const response = await fetch(requestUrl);
-    return response;
+function initPokemonDb() {
+    pokemonDb = new IndexedDB('pokemonDB', 'pokemon', 1, `++id, ${POKE_NUMBER}, ${POKE_NAME}, ${POKE_IMG}, data`);
+}
+
+async function fetchFromNetwork(number) {
+    const response = await fetch(`${POKE_API}${number}`);
+    const pokemon = await response.json();
+    return pokemon;
 }
 
 async function fetchImageAndReturnAsBlob(imageUrl) {
@@ -27,41 +32,53 @@ async function fetchImageAndReturnAsBlob(imageUrl) {
     return blob;
 }
 
+async function fetchAndStoreFirstGeneration() {
+
+    console.log('Bulk adding first generation from network');
+    const numbers = Array.from(new Array(25), (x, i) => i + 1);
+    const pokemonsRequests = numbers.map(fetchFromNetwork);
+    const pokemons = await Promise.all(pokemonsRequests);
+
+    const pokemonsReducedPromises = pokemons.map(async (pokemon) => {
+        const newPokemon = {
+            [POKE_NUMBER]: pokemon.id,
+            [POKE_NAME]: pokemon.name,
+            [POKE_IMG]: await fetchImageAndReturnAsBlob(pokemon.sprites.other['official-artwork'].front_default),
+            data: getNewPokemonReduced(pokemon)
+        }
+
+        return newPokemon;
+    });
+
+    initPokemonDb();
+
+    const pokemonsReduced = await Promise.all(pokemonsReducedPromises);
+    await pokemonDb.bulkAdd(pokemonsReduced);
+}
+
+async function initPokedex() {
+
+    const dbExists = await checkIfDatabaseExists('pokemonDB');
+
+    if (!dbExists)
+        await fetchAndStoreFirstGeneration(); 
+    else
+        initPokemonDb();
+
+    const pokedex = document.getElementById('pokedex');
+
+    const pokemons = await pokemonDb.getAll();
+
+    pokemons.forEach((pokemon) => pokedex.appendChild(createPokemonCard(pokemon)));
+}
+
 function getNewPokemonReduced(pokemon) {
+    const pokemonProperties = ['base_experience','height','id','name','order','stats','types','weight'];
+
     return Object.keys(pokemon).reduce((object, key) => {
         if (pokemonProperties.includes(key)) object[key] = pokemon[key];
         return object;
       }, {})
-}
-
-async function getFromDbOrFetchByNumber(number) {
-
-    var pokemon = await pokemonDb.getByProperty(POKE_NUMBER, number);
-
-    if (pokemon && pokemon.length !== 0) return pokemon[0];
-
-    const requestUrl = `${POKE_API}${number}`;
-    const response = await fetchFromNetwork(requestUrl);
-    pokemon = await response.json();
-
-    if (pokemon) {
-        console.log(`Pokemon added to db: ${number}`);
-
-        const pokemonReduced = getNewPokemonReduced(pokemon);
-
-        pokemon = {
-            [POKE_NUMBER]: number,
-            [POKE_NAME]: pokemon.name,
-            [POKE_IMG]: await fetchImageAndReturnAsBlob(pokemon.sprites.other['official-artwork'].front_default),
-            data: pokemonReduced
-        }
-
-        await pokemonDb.add(pokemon);
-
-        return pokemon;
-    }
-
-    return null;
 }
 
 function createPokemonCardNotFound() {
@@ -83,15 +100,6 @@ function createPokemonCardNotFound() {
     div.appendChild(img);
     div.appendChild(footer);
     return div;
-}
-
-async function createPokemon(number) {
-
-    const pokemon = await getFromDbOrFetchByNumber(number);
-
-    if (!pokemon) return createPokemonCardNotFound();
-
-    return createPokemonCard(pokemon);
 }
 
 function createPokemonCard(pokemon) {
@@ -123,7 +131,7 @@ function filterByNumberOrName(pokemon, char) {
 }
 
 async function findPokemon(search) {
-    console.log(search);
+
     const pokemonList = await pokemonDb.getAll();
     let pokemonsFiltered = pokemonList;
     
@@ -143,21 +151,13 @@ function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
         const onsuccess = () => console.log('[Service Worker] Registered');
         const onerror = () => console.log('[Service Worker] Registration failed:');
-        
-        navigator.serviceWorker
-        .register('../../sw.js')
-        .then(onsuccess)
-        .catch(onerror);
+        navigator.serviceWorker.register('../../sw.js').then(onsuccess).catch(onerror);
     }
 }
 
 async function onInit() {
     registerServiceWorker();
-
-    const pokedex = document.getElementById('pokedex');
-    const pokemonNumbers = Array.from(new Array(25), (x, i) => i + 1);
-    for (let number of pokemonNumbers)
-        pokedex.appendChild(await createPokemon(number));
+    await initPokedex(); 
 }
 
 onInit();

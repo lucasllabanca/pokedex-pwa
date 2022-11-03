@@ -19,7 +19,7 @@ export class IndexedDB {
 
         this.#db.open();
     }
-
+    
     async getAll() {
         return await this.#db[this.#collection].toArray();
     }
@@ -40,6 +40,10 @@ export class IndexedDB {
         await this.#db[this.#collection].add(data);
     }    
 
+    async bulkAdd(data) {
+        await this.#db[this.#collection].bulkPut(data);
+    }
+
     async update(property, value, data) {
         const oldData = await this.#db[this.#collection].where(property).equals(value).toArray();
 
@@ -51,4 +55,8 @@ export class IndexedDB {
         this.#db[this.#collection].where(property).equals(value).delete().then((count) => { return count });
     }
 
+}
+
+export async function checkIfDatabaseExists(dbName) {
+    return Dexie.exists(dbName);
 }
