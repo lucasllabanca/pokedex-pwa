@@ -59,7 +59,7 @@ h1 {
 
 .card footer {
     align-self: stretch;
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 12px 12px;
     outline: 1px solid;
 }
 
@@ -116,6 +116,7 @@ input[type="search"] {
     display: block;
     padding: 9px 4px 9px 40px;
     border-radius: 14px;
+    text-transform: lowercase;
     background: transparent url("../imgs/search.svg") no-repeat 12px center;
 }
 
@@ -142,4 +143,4 @@ input[type="search"]:focus {
 .dark { color: #705746; background-color: #705746; }
 .steel { color: #B7B7CE; background-color: #B7B7CE; }
 .fairy { color: #D685AD; background-color: #D685AD;}
-.notFound { color: gray; background-color: gray; }
+.not-found { color: gray; background-color: gray; }

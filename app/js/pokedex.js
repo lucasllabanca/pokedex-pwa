@@ -9,7 +9,10 @@ const pokemonDb = new IndexedDB('pokemonDB', 'pokemon', 1, `++id, ${POKE_NUMBER}
 
 const searchInput = document.getElementById('search');
 searchInput.addEventListener('keyup', () => {
-    findPokemon(searchInput);
+    findPokemon(searchInput.value);
+});
+searchInput.addEventListener('search', () => {
+    findPokemon(searchInput.value);
 });
 
 async function fetchFromNetwork(requestUrl) {
@@ -68,11 +71,12 @@ function createPokemonCardNotFound() {
     const h2 = document.createElement('h2');
     const img = document.createElement('img');
     const span = document.createElement('span');
-    div.className = 'card notFound';
+    div.className = 'card not-found';
     h2.innerText = '#';
-    img.src = '../imgs/icon-256x256.png';
-    footer.className = 'notFound';
-    span.innerText = 'Not Found';
+    img.src = 'app/imgs/icon-256x256.png';
+    img.style = 'padding: 1rem;';
+    footer.className = 'not-found';
+    span.innerText = 'missing';
     header.appendChild(h2);
     footer.appendChild(span);
     div.appendChild(header);
@@ -119,12 +123,12 @@ function filterByNumberOrName(pokemon, char) {
 }
 
 async function findPokemon(search) {
-
+    console.log(search);
     const pokemonList = await pokemonDb.getAll();
     let pokemonsFiltered = pokemonList;
     
-    if (search.value.length !== 0)
-        pokemonsFiltered = pokemonList.filter((pokemon) => { return filterByNumberOrName(pokemon, search.value); });
+    if (search.length !== 0)
+        pokemonsFiltered = pokemonList.filter((pokemon) => { return filterByNumberOrName(pokemon, search); });
 
     const pokedex = document.getElementById('pokedex');
     pokedex.innerHTML = '';
