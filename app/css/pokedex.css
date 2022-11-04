@@ -135,6 +135,32 @@ input[type="search"]:focus {
     transition: 0.5s;
 }
 
+#loading > .rotate {
+    animation: rotation 2s;
+}
+
+#loading > .linear {
+    animation-timing-function: linear;
+}
+
+#loading > .infinite {
+    animation-iteration-count: infinite;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+}
+
 .normal { color: #A8A77A; background-color: #A8A77A; }
 .fire { color: #EE8130; background-color: #EE8130; }
 .water { color: #6390F0; background-color: #6390F0; }

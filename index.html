@@ -12,12 +12,16 @@
     <title>Pokédex PWA</title>
 </head>
 <body>
-
-    <div class="banner">
-        <img id="pokeball" src="app/imgs/icon-256x256.png" alt="Pokéball">
-        <span>Pokédex</span>
+    <div id="loading" class="loading" style="display: none;">
+        <img src="app/imgs/icon-256x256.png" alt="Pokéball" class="rotate linear infinite">
     </div>
-    <input id="search" type="search" placeholder="Find by number or name">
-    <div id="pokedex" class="pokedex"></div>
+    <div id="content" style="display: none;">
+        <div class="banner">
+            <img id="pokeball" src="app/imgs/icon-256x256.png" alt="Pokéball">
+            <span>Pokédex</span>
+        </div>
+        <input id="search" type="search" placeholder="Find by number or name">
+        <div id="pokedex" class="pokedex"></div>
+    </div>
 </body>
 </html>

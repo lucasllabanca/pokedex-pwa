@@ -33,6 +33,13 @@ async function rotatePokeball() {
     }
 }
 
+async function showHideLoading() {
+    const content = document.getElementById('content');
+    const loading = document.getElementById('loading');
+    loading.style.display = loading.style.display === 'none' ? '' : 'none';
+    content.style.display = loading.style.display === 'none' ? '' : 'none';
+}
+
 async function fetchFromNetwork(number) {
     const response = await fetch(`${POKE_API}${number}`);
     const pokemon = await response.json();
@@ -80,6 +87,7 @@ async function initPokedex() {
 
     const pokemons = await pokemonDb.getAll();
     bindPokedex(pokemons);
+    await showHideLoading();
 }
 
 function getNewPokemonReduced(pokemon) {
@@ -185,6 +193,7 @@ function registerServiceWorker() {
 }
 
 async function onInit() {
+    await showHideLoading();
     registerServiceWorker();
     await initPokedex(); 
 }
