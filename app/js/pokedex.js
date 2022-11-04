@@ -20,6 +20,19 @@ function initPokemonDb() {
     pokemonDb = new IndexedDB('pokemonDB', 'pokemon', 1, `++id, ${POKE_NUMBER}, ${POKE_NAME}, ${POKE_IMG}, data`);
 }
 
+async function rotatePokeball() {
+    var pokeball = document.getElementById('pokeball');
+
+    if (pokeball.classList.contains('rotate')) {
+        pokeball.classList.remove("rotate");
+        pokeball.classList.add("rotate-again");
+    }
+    else {
+        pokeball.classList.remove("rotate-again");
+        pokeball.classList.add("rotate");
+    }
+}
+
 async function fetchFromNetwork(number) {
     const response = await fetch(`${POKE_API}${number}`);
     const pokemon = await response.json();
@@ -42,7 +55,7 @@ async function fetchAndStoreFirstGeneration() {
     const pokemonsReducedPromises = pokemons.map(async (pokemon) => {
         const newPokemon = {
             [POKE_NUMBER]: pokemon.id,
-            [POKE_NAME]: pokemon.name,
+            [POKE_NAME]: pokemon.name.toLowerCase().trim(),
             [POKE_IMG]: await fetchImageAndReturnAsBlob(pokemon.sprites.other['official-artwork'].front_default),
             data: getNewPokemonReduced(pokemon)
         }
@@ -65,11 +78,8 @@ async function initPokedex() {
     else
         initPokemonDb();
 
-    const pokedex = document.getElementById('pokedex');
-
     const pokemons = await pokemonDb.getAll();
-
-    pokemons.forEach((pokemon) => pokedex.appendChild(createPokemonCard(pokemon)));
+    bindPokedex(pokemons);
 }
 
 function getNewPokemonReduced(pokemon) {
@@ -79,6 +89,17 @@ function getNewPokemonReduced(pokemon) {
         if (pokemonProperties.includes(key)) object[key] = pokemon[key];
         return object;
       }, {})
+}
+
+function bindPokedex(pokemons) {
+
+    const pokedex = document.getElementById('pokedex');
+    pokedex.innerHTML = '';
+
+    if (pokemons && pokemons.length !== 0)
+        pokemons.forEach((pokemon) => pokedex.appendChild(createPokemonCard(pokemon)));
+    else
+        pokedex.appendChild(createPokemonCardNotFound());
 }
 
 function createPokemonCardNotFound() {
@@ -126,25 +147,33 @@ function createPokemonCard(pokemon) {
     return div;
 }
 
-function filterByNumberOrName(pokemon, char) {
-    return pokemon[POKE_NAME].includes(char);
+function isNumeric(value) {
+    return /^\d+$/.test(value);
+}
+
+function filterByNumber(pokemon, value) {
+    return pokemon[POKE_NUMBER] == value;
+}
+
+function filterByName(pokemon, value) {
+    return pokemon[POKE_NAME].includes(value);
 }
 
 async function findPokemon(search) {
-
+    rotatePokeball();
     const pokemonList = await pokemonDb.getAll();
     let pokemonsFiltered = pokemonList;
     
-    if (search.length !== 0)
-        pokemonsFiltered = pokemonList.filter((pokemon) => { return filterByNumberOrName(pokemon, search); });
+    search = search.toLowerCase().trim();
+    
+    if (search.length !== 0) {
+        if (isNumeric(search)) 
+            pokemonsFiltered = pokemonList.filter((pokemon) => { return filterByNumber(pokemon, search); });
+        else
+            pokemonsFiltered = pokemonList.filter((pokemon) => { return filterByName(pokemon, search); });
+    }
 
-    const pokedex = document.getElementById('pokedex');
-    pokedex.innerHTML = '';
-
-    if (pokemonsFiltered && pokemonsFiltered.length !== 0)
-        pokemonsFiltered.forEach((pokemon) => { pokedex.appendChild(createPokemonCard(pokemon)); });
-    else
-        pokedex.appendChild(createPokemonCardNotFound());
+    bindPokedex(pokemonsFiltered);
 }
 
 function registerServiceWorker() {

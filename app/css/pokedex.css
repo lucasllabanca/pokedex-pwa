@@ -125,6 +125,16 @@ input[type="search"]:focus {
     outline: none;
 }
 
+.rotate {
+    transform: rotate(360deg);
+    transition: 0.5s;
+}
+
+.rotate-again {
+    transform: rotate(-360deg);
+    transition: 0.5s;
+}
+
 .normal { color: #A8A77A; background-color: #A8A77A; }
 .fire { color: #EE8130; background-color: #EE8130; }
 .water { color: #6390F0; background-color: #6390F0; }
