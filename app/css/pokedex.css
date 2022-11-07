@@ -29,7 +29,6 @@ h1 {
     width: 244px;
     border: 2px solid;
     border-radius: 16px;
-    cursor: pointer;
     background: white !important;
 }
 
@@ -55,12 +54,14 @@ h1 {
     width: 240px;
     background: white;
     align-self: center;
+    cursor: pointer;
 }
 
 .card footer {
     align-self: stretch;
     border-radius: 0 0 12px 12px;
     outline: 1px solid;
+    cursor: pointer;
 }
 
 .card footer > span {
@@ -166,22 +167,78 @@ input[type="search"]:focus {
     justify-content: center;
 }
 
+.btn-remove {
+    float: left;
+    line-height: 25px;
+    font-size: 22px;
+    border: 2px solid;
+    padding: 0px;
+    width: 34px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 8px;
+    cursor: pointer;
+    font-weight: bolder;
+    font-weight: 600;
+    background-color: white !important;
+}
+
+.btn-remove:hover {
+    background-color: #f0f0f0 !important;
+}
+
 .normal { color: #A8A77A; background-color: #A8A77A; }
+.normal:hover { color: #dbdaa8; background-color: #dbdaa8; }
+
 .fire { color: #EE8130; background-color: #EE8130; }
+.fire:hover { color: #ffb67f; background-color: #ffb67f; }
+
 .water { color: #6390F0; background-color: #6390F0; }
+.water:hover { color: #88aeff; background-color: #88aeff; }
+
 .electric { color: #F7D02C; background-color: #F7D02C; }
+.electric:hover { color: #ffe681; background-color: #ffe681; }
+
 .grass { color: #7AC74C; background-color: #7AC74C; }
+.grass:hover { color: #a4e77e; background-color: #a4e77e; }
+
 .ice { color: #96D9D6; background-color: #96D9D6; }
+.ice:hover { color: #befefb; background-color: #befefb; }
+
 .fighting { color: #C22E28; background-color: #C22E28; }
+.fighting:hover { color: #fc635e; background-color: #fc635e; }
+
 .poison { color: #A33EA1; background-color: #A33EA1; }
+.poison:hover { color: #ef69ed; background-color: #ef69ed; }
+
 .ground { color: #E2BF65; background-color: #E2BF65; }
+.ground:hover { color: #ffe299; background-color: #ffe299; }
+
 .flying { color: #A98FF3; background-color: #A98FF3; }
+.flying:hover { color: #c9b5ff; background-color: #c9b5ff; }
+
 .psychic { color: #F95587; background-color: #F95587; }
+.psychic:hover { color: #ff93b3; background-color: #ff93b3; }
+
 .bug { color: #A6B91A; background-color: #A6B91A; }
+.bug:hover { color: #ebff52; background-color: #ebff52; }
+
 .rock { color: #B6A136; background-color: #B6A136; }
+.rock:hover { color: #ffe876; background-color: #ffe876; }
+
 .ghost { color: #735797; background-color: #735797; }
+.ghost:hover { color: #b285ec; background-color: #b285ec; }
+
 .dragon { color: #6F35FC; background-color: #6F35FC; }
+.dragon:hover { color: #ae8eff; background-color: #ae8eff; }
+
 .dark { color: #705746; background-color: #705746; }
+.dark:hover { color: #c39b81; background-color: #c39b81; }
+
 .steel { color: #B7B7CE; background-color: #B7B7CE; }
+.steel:hover { color: #dcdcf9; background-color: #dcdcf9; }
+
 .fairy { color: #D685AD; background-color: #D685AD;}
+.fairy:hover { color: #ffa6d3; background-color: #ffa6d3;}
+
 .not-found { color: gray; background-color: gray; }
