@@ -183,10 +183,6 @@ input[type="search"]:focus {
     background-color: white !important;
 }
 
-.btn-remove:hover {
-    background-color: #f0f0f0 !important;
-}
-
 .normal { color: #A8A77A; background-color: #A8A77A; }
 .normal:hover { color: #dbdaa8; background-color: #dbdaa8; }
 

@@ -85,8 +85,7 @@ async function initPokedex() {
     else
         initPokemonDb();
 
-    const pokemons = await pokemonDb.getAll();
-    bindPokedex(pokemons);
+    await bindPokedexFromDb();
     await showHideLoading();
 }
 
@@ -97,6 +96,11 @@ function getNewPokemonReduced(pokemon) {
         if (pokemonProperties.includes(key)) object[key] = pokemon[key];
         return object;
       }, {})
+}
+
+async function bindPokedexFromDb() {
+    const pokemons = await pokemonDb.getAll();
+    bindPokedex(pokemons);
 }
 
 function bindPokedex(pokemons) {
@@ -151,6 +155,7 @@ function createPokemonCard(pokemon) {
     spanRemove.className = `btn-remove ${type}`;
     spanRemove.innerText = 'X';
     spanRemove.alt = 'Remove pokémon from your pokédex';
+    spanRemove.addEventListener('click', async () => { await removePokemon(pokemon[POKE_NUMBER]); })
     header.appendChild(spanRemove);
     header.appendChild(h2);
     footer.appendChild(span);
@@ -187,6 +192,11 @@ async function findPokemon(search) {
     }
 
     bindPokedex(pokemonsFiltered);
+}
+
+async function removePokemon(number) {
+    await pokemonDb.delete(POKE_NUMBER, number);
+    await bindPokedexFromDb();
 }
 
 function registerServiceWorker() {
