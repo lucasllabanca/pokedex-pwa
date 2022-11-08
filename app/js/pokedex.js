@@ -1,4 +1,5 @@
 import {IndexedDB, checkIfDatabaseExists} from './indexeddb.js';
+import {cuteAlert, cuteToast} from './alert.js';
 
 const POKE_API = 'https://pokeapi.co/api/v2/pokemon/';
 const POKE_NUMBER = 'number';
@@ -142,7 +143,8 @@ function createPokemonCard(pokemon) {
     const h2 = document.createElement('h2');
     const img = document.createElement('img');
     const span = document.createElement('span');
-    const spanRemove = document.createElement('span');
+    const spanDelete = document.createElement('span');
+    const imgDelete = document.createElement('img');
     const type = pokemon.data.types[0].type.name;
     div.className = `card ${type}`;
     //div.setAttribute("onclick",`abrirStripes(${number});`);
@@ -152,11 +154,14 @@ function createPokemonCard(pokemon) {
     img.title = pokemon[POKE_NAME];
     footer.className = type;
     span.innerText = pokemon[POKE_NAME];
-    spanRemove.className = `btn-remove ${type}`;
-    spanRemove.innerText = 'X';
-    spanRemove.alt = 'Remove pokémon from your pokédex';
-    spanRemove.addEventListener('click', async () => { await removePokemon(pokemon[POKE_NUMBER]); })
-    header.appendChild(spanRemove);
+    spanDelete.className = `btn-remove ${type}`;
+    spanDelete.title = 'Remove pokémon from your pokédex';
+    spanDelete.addEventListener('click', async () => { await removePokemon(pokemon[POKE_NUMBER], pokemon[POKE_NAME]); });
+    imgDelete.src = 'app/imgs/delete-32x32.png';
+    imgDelete.alt = 'Remove pokémon from your pokédex';
+    imgDelete.title = 'Remove pokémon from your pokédex';
+    spanDelete.appendChild(imgDelete);
+    header.appendChild(spanDelete);
     header.appendChild(h2);
     footer.appendChild(span);
     div.appendChild(header);
@@ -194,9 +199,27 @@ async function findPokemon(search) {
     bindPokedex(pokemonsFiltered);
 }
 
-async function removePokemon(number) {
-    await pokemonDb.delete(POKE_NUMBER, number);
-    await bindPokedexFromDb();
+async function removePokemon(number, name) {
+
+    cuteAlert({
+        type: 'question',
+        title: 'Remove Pokémon?',
+        message: `Are you sure you want to remove this lovely ${name} from your pokédex?`,
+        img: 'question.svg',
+        confirmText: "YES",
+        cancelText: "NOT REALLY"
+    }).then(async (e) => { 
+        if ( e == 'confirm'){
+            await pokemonDb.delete(POKE_NUMBER, number);
+            await bindPokedexFromDb();
+            cuteToast({
+                type: "success", // or 'info', 'error', 'warning'
+                title: 'Removed',
+                message: `${name} removed from your pokédex`,
+                timer: 5000
+            });
+        }
+    });    
 }
 
 function registerServiceWorker() {

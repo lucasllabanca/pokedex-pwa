@@ -45,6 +45,7 @@ h1 {
 
 .card header > h2 {
     line-height: 6px;
+    float: right;
 }
 
 .card > img {
@@ -169,37 +170,42 @@ input[type="search"]:focus {
 
 .btn-remove {
     float: left;
-    line-height: 25px;
+    line-height: 22px;
     font-size: 22px;
     border: 2px solid;
     padding: 0px;
     width: 34px;
-    border-radius: 10px;
+    border-radius: 8px;
     text-align: center;
     margin-top: 8px;
     cursor: pointer;
-    font-weight: bolder;
+    justify-content: center;
     font-weight: 600;
-    background-color: white !important;
+}
+
+.btn-remove > img {
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
 }
 
 .normal { color: #A8A77A; background-color: #A8A77A; }
-.normal:hover { color: #dbdaa8; background-color: #dbdaa8; }
+.normal:hover { color: #cfce91; background-color: #cfce91; }
 
 .fire { color: #EE8130; background-color: #EE8130; }
-.fire:hover { color: #ffb67f; background-color: #ffb67f; }
+.fire:hover { color: #f7a464; background-color: #f7a464; }
 
 .water { color: #6390F0; background-color: #6390F0; }
 .water:hover { color: #88aeff; background-color: #88aeff; }
 
 .electric { color: #F7D02C; background-color: #F7D02C; }
-.electric:hover { color: #ffe681; background-color: #ffe681; }
+.electric:hover { color: #fbdb5c; background-color: #fbdb5c; }
 
 .grass { color: #7AC74C; background-color: #7AC74C; }
-.grass:hover { color: #a4e77e; background-color: #a4e77e; }
+.grass:hover { color: #96da6f; background-color: #96da6f; }
 
 .ice { color: #96D9D6; background-color: #96D9D6; }
-.ice:hover { color: #befefb; background-color: #befefb; }
+.ice:hover { color: #aaf1ed; background-color: #aaf1ed; }
 
 .fighting { color: #C22E28; background-color: #C22E28; }
 .fighting:hover { color: #fc635e; background-color: #fc635e; }
@@ -208,19 +214,19 @@ input[type="search"]:focus {
 .poison:hover { color: #ef69ed; background-color: #ef69ed; }
 
 .ground { color: #E2BF65; background-color: #E2BF65; }
-.ground:hover { color: #ffe299; background-color: #ffe299; }
+.ground:hover { color: #edcf81; background-color: #edcf81; }
 
 .flying { color: #A98FF3; background-color: #A98FF3; }
-.flying:hover { color: #c9b5ff; background-color: #c9b5ff; }
+.flying:hover { color: #b9a1fb; background-color: #b9a1fb; }
 
 .psychic { color: #F95587; background-color: #F95587; }
 .psychic:hover { color: #ff93b3; background-color: #ff93b3; }
 
 .bug { color: #A6B91A; background-color: #A6B91A; }
-.bug:hover { color: #ebff52; background-color: #ebff52; }
+.bug:hover { color: #b6c82b; background-color: #b6c82b; }
 
 .rock { color: #B6A136; background-color: #B6A136; }
-.rock:hover { color: #ffe876; background-color: #ffe876; }
+.rock:hover { color: #d6bf4b; background-color: #d6bf4b; }
 
 .ghost { color: #735797; background-color: #735797; }
 .ghost:hover { color: #b285ec; background-color: #b285ec; }
@@ -232,9 +238,9 @@ input[type="search"]:focus {
 .dark:hover { color: #c39b81; background-color: #c39b81; }
 
 .steel { color: #B7B7CE; background-color: #B7B7CE; }
-.steel:hover { color: #dcdcf9; background-color: #dcdcf9; }
+.steel:hover { color: #c7c7df; background-color: #c7c7df; }
 
 .fairy { color: #D685AD; background-color: #D685AD;}
-.fairy:hover { color: #ffa6d3; background-color: #ffa6d3;}
+.fairy:hover { color: #eb9ac2; background-color: #eb9ac2;}
 
 .not-found { color: gray; background-color: gray; }
