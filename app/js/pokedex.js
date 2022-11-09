@@ -41,8 +41,11 @@ async function showHideLoading() {
     content.style.display = loading.style.display === 'none' ? '' : 'none';
 }
 
-async function fetchFromNetwork(number) {
-    const response = await fetch(`${POKE_API}${number}`);
+async function fetchPokemonFromNetwork(numberOrName) {
+    const response = await fetch(`${POKE_API}${numberOrName}`);
+
+    if (response.status !== 200) return null;
+
     const pokemon = await response.json();
     return pokemon;
 }
@@ -57,24 +60,18 @@ async function fetchAndStoreFirstGeneration() {
 
     console.log('Bulk adding first generation from network');
     const numbers = Array.from(new Array(25), (x, i) => i + 1);
-    const pokemonsRequests = numbers.map(fetchFromNetwork);
+    const pokemonsRequests = numbers.map(fetchPokemonFromNetwork);
     const pokemons = await Promise.all(pokemonsRequests);
 
-    const pokemonsReducedPromises = pokemons.map(async (pokemon) => {
-        const newPokemon = {
-            [POKE_NUMBER]: pokemon.id,
-            [POKE_NAME]: pokemon.name.toLowerCase().trim(),
-            [POKE_IMG]: await fetchImageAndReturnAsBlob(pokemon.sprites.other['official-artwork'].front_default),
-            data: getNewPokemonReduced(pokemon)
-        }
-
-        return newPokemon;
-    });
+    const pokemonsReducedPromises = pokemons.map(getNewPokemonReduced);
 
     initPokemonDb();
 
     const pokemonsReduced = await Promise.all(pokemonsReducedPromises);
-    await pokemonDb.bulkAdd(pokemonsReduced);
+    const pokemonsNotNull = await pokemonsReduced.filter(pokemon => pokemon);
+
+    if (pokemonsNotNull && pokemonsNotNull.length !== 0)
+        await pokemonDb.bulkAdd(pokemonsNotNull);
 }
 
 async function initPokedex() {
@@ -90,7 +87,21 @@ async function initPokedex() {
     await showHideLoading();
 }
 
-function getNewPokemonReduced(pokemon) {
+async function getNewPokemonReduced(pokemon) {
+
+    if (!pokemon) return pokemon;
+
+    const newPokemon = {
+        [POKE_NUMBER]: pokemon.id,
+        [POKE_NAME]: pokemon.name.toLowerCase().trim(),
+        [POKE_IMG]: await fetchImageAndReturnAsBlob(pokemon.sprites.other['official-artwork'].front_default),
+        data: reducePokemon(pokemon)
+    }
+
+    return newPokemon;
+}
+
+function reducePokemon(pokemon) {
     const pokemonProperties = ['base_experience','height','id','name','order','stats','types','weight'];
 
     return Object.keys(pokemon).reduce((object, key) => {
@@ -187,15 +198,26 @@ function filterByName(pokemon, value) {
 async function findPokemon(search) {
     rotatePokeball();
     const pokemonList = await pokemonDb.getAll();
-    let pokemonsFiltered = pokemonList;
+    var pokemonsFiltered = pokemonList;
     
     search = search.toLowerCase().trim();
-    
+
     if (search.length !== 0) {
+
         if (isNumeric(search)) 
             pokemonsFiltered = pokemonList.filter((pokemon) => { return filterByNumber(pokemon, search); });
         else
             pokemonsFiltered = pokemonList.filter((pokemon) => { return filterByName(pokemon, search); });
+    
+        if (!pokemonsFiltered || pokemonsFiltered.length === 0) {
+
+            const pokemon = await fetchPokemonFromNetwork(search);
+
+            if (pokemon) {
+                const pokemonReduced = await getNewPokemonReduced(pokemon);
+                pokemonsFiltered.push(pokemonReduced);
+            }
+        }
     }
 
     bindPokedex(pokemonsFiltered);
