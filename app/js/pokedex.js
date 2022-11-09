@@ -125,9 +125,11 @@ function createPokemonCardNotFound() {
     div.className = 'card not-found';
     h2.innerText = '#';
     img.src = 'app/imgs/icon-256x256.png';
+    img.alt = 'Missing pokémon';
     img.style = 'padding: 1rem;';
     footer.className = 'not-found';
-    span.innerText = 'missing';
+    span.innerText = 'not found in pokédex nor pokéAPI';
+    span.classList.add('ft-sz-20');
     header.appendChild(h2);
     footer.appendChild(span);
     div.appendChild(header);
@@ -204,7 +206,7 @@ async function removePokemon(number, name) {
     cuteAlert({
         type: 'question',
         title: `Removing ${name}`,
-        message: `Are you sure you want to remove this lovely ${name} from your pokédex?`,
+        message: `Are you sure you want to remove this cute ${name} from your pokédex?`,
         img: 'question.svg',
         confirmText: 'YES',
         cancelText: 'NO'
