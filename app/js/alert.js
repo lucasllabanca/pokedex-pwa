@@ -4,9 +4,7 @@ export async function cuteAlert({
   message,
   img,
   buttonText = 'OK',
-  confirmText = 'OK',
-  vibrate = [],
-  playSound = null,
+  confirmText = 'OK', 
   cancelText = 'Cancel',
   closeStyle,
 }) {
@@ -25,19 +23,10 @@ export async function cuteAlert({
     if (type === 'question') {
       btnTemplate = `
       <div class="question-buttons">
-        <button class="confirm-button ${type}-bg ${type}-btn">${confirmText}</button>
+        <button class="confirm-button info-bg ${type}-btn">${confirmText}</button>
         <button class="cancel-button error-bg error-btn">${cancelText}</button>
       </div>
       `;
-    }
-
-    if (vibrate.length > 0) {
-      navigator.vibrate(vibrate);
-    }
-
-    if (playSound !== null) {
-      let sound = new Audio(playSound);
-      sound.play();
     }
 
     const template = `
@@ -99,11 +88,9 @@ export async function cuteAlert({
   });
 };
 
-export async function cuteToast({ type, title, message, timer = 5000,  vibrate = [], playSound = null }) {
+export async function cuteToast({ type, title, message, timer = 5000 }) {
   return new Promise(resolve => {
     const body = document.querySelector('body');
-
-    const scripts = document.getElementsByTagName('script');
 
     const src = 'app/imgs';
 
@@ -124,7 +111,7 @@ export async function cuteToast({ type, title, message, timer = 5000,  vibrate =
       <div>
         <div class="toast-frame">
           <div class="toast-body">
-            <img class="toast-body-img" src="${src}/${type}.svg" />'
+            <img class="toast-body-img" src="${src}/${type}.svg" />
             <div class="toast-body-content">
               <span class="toast-title">${title}</span>
               <span class="toast-message">${message}</span>
@@ -146,15 +133,6 @@ export async function cuteToast({ type, title, message, timer = 5000,  vibrate =
     }
 
     const toastContent = document.getElementById(`${toastId}-toast-content`);
-
-    if (vibrate.length > 0) {
-      navigator.vibrate(vibrate);
-    }
-
-    if (playSound !== null) {
-      let sound = new Audio(playSound);
-      sound.play();
-    }
 
     setTimeout(() => {
       toastContent.remove();

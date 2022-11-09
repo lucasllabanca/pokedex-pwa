@@ -225,11 +225,14 @@
   
   .toast-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     top: 15px;
-    right: 15px;
     position: fixed;
     z-index: 999999;
+    justify-content: center;
+    width: 100%;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
   
   .toast-content {
@@ -321,7 +324,7 @@
   }
   
   .error-bg {
-    background: #d85261;
+    background: #e64c3c;
   }
   
   .success-bg {
@@ -333,11 +336,11 @@
   }
   
   .question-bg {
-    background: #779ecb;
+    background: #e64c3c;
   }
   
   .error-btn:hover {
-    background: #e5a4b4;
+    background: #f87263;
   }
   
   .success-btn:hover {
@@ -349,7 +352,7 @@
   }
   
   .info-btn:hover {
-    background: #c3e6fb;
+    background: #769ae8;
   }
   
   .question-btn:hover {
@@ -373,6 +376,6 @@
   }
   
   .info-bg {
-    background: #88cef7;
+    background: #6390F0;
   }
   

@@ -203,20 +203,19 @@ async function removePokemon(number, name) {
 
     cuteAlert({
         type: 'question',
-        title: 'Remove Pokémon?',
+        title: `Removing ${name}`,
         message: `Are you sure you want to remove this lovely ${name} from your pokédex?`,
         img: 'question.svg',
-        confirmText: "YES",
-        cancelText: "NOT REALLY"
+        confirmText: 'YES',
+        cancelText: 'NO'
     }).then(async (e) => { 
         if ( e == 'confirm'){
             await pokemonDb.delete(POKE_NUMBER, number);
             await bindPokedexFromDb();
             cuteToast({
-                type: "success", // or 'info', 'error', 'warning'
+                type: 'success', // or 'info', 'error', 'warning'
                 title: 'Removed',
-                message: `${name} removed from your pokédex`,
-                timer: 5000
+                message: `${name} removed from your pokédex`
             });
         }
     });    
