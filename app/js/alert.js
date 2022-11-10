@@ -89,7 +89,7 @@ export async function cuteAlert({
   });
 };
 
-export async function cuteToast({ type, title, message, timer = 5000 }) {
+export async function cuteToast({ type, title, message, timer = 3000 }) {
   return new Promise(resolve => {
     const body = document.querySelector('body');
 

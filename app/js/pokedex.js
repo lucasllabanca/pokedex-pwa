@@ -252,7 +252,7 @@ async function addPokemon(pokemon) {
     }).then(async (e) => { 
         if ( e == 'confirm') {
             await pokemonDb.add(pokemon);
-            await bindPokedexFromDb();
+            bindPokedex([pokemon]);
             cuteToast({
                 type: 'info', // success, info, error, warning
                 title: 'Added successfully',
