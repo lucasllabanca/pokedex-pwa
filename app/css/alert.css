@@ -334,8 +334,12 @@
   .warning-bg {
     background: #fada5e;
   }
+
+  .question-add-bg {
+    background: #6390F0;
+  }
   
-  .question-bg {
+  .question-bg, .question-remove-bg {
     background: #e64c3c;
   }
   
@@ -351,10 +355,14 @@
     background: #fcecae;
   }
   
-  .info-btn:hover {
-    background: #769ae8;
+  .info-btn:hover, .question-add-btn:hover {
+    background: #88aeff;
   }
-  
+
+  .question-remove-btn:hover {
+    background: #f87263;
+  }
+
   .question-btn:hover {
     background: #bacee4;
   }

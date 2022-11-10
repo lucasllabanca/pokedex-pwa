@@ -75,6 +75,10 @@ h1 {
     color: #FFFFFF;
 }
 
+.cursor-default {
+    cursor: default !important;
+}
+
 .pokemon img {
     width: 400px;
     height: 400px;
@@ -186,6 +190,27 @@ input[type="search"]:focus {
 .btn-remove > img {
     width: 24px;
     height: 24px;
+    margin-top: 2px;
+}
+
+.btn-add {
+    float: left;
+    line-height: 21px;
+    font-size: 22px;
+    border: 2px solid;
+    padding: 0px;
+    width: 34px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 8px;
+    cursor: pointer;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.btn-add > img {
+    width: 26px;
+    height: 26px;
     margin-top: 2px;
 }
 

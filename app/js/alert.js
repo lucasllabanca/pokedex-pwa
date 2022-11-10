@@ -6,6 +6,7 @@ export async function cuteAlert({
   buttonText = 'OK',
   confirmText = 'OK', 
   cancelText = 'Cancel',
+  cancelType = 'error',
   closeStyle,
 }) {
   return new Promise(resolve => {
@@ -20,11 +21,11 @@ export async function cuteAlert({
 
     let btnTemplate = `<button class="alert-button ${type}-bg ${type}-btn">${buttonText}</button>`;
 
-    if (type === 'question') {
+    if (type.includes('question')) {
       btnTemplate = `
       <div class="question-buttons">
-        <button class="confirm-button info-bg ${type}-btn">${confirmText}</button>
-        <button class="cancel-button error-bg error-btn">${cancelText}</button>
+        <button class="confirm-button ${type}-bg ${type}-btn">${confirmText}</button>
+        <button class="cancel-button ${cancelType}-bg ${cancelType}-btn">${cancelText}</button>
       </div>
       `;
     }
@@ -55,7 +56,7 @@ export async function cuteAlert({
     const alertFrame = document.querySelector('.alert-frame');
     const alertClose = document.querySelector('.alert-close');
 
-    if (type === 'question') {
+    if (type.includes('question')) {
       const confirmButton = document.querySelector('.confirm-button');
       const cancelButton = document.querySelector('.cancel-button');
 

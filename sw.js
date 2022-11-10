@@ -1,4 +1,4 @@
-const STATIC_ASSETS_KEY = 'app-pokedex-v10';
+const STATIC_ASSETS_KEY = 'app-pokedex-v11';
 
 const assetsToCache = [
     'https://cdn.jsdelivr.net/npm/dexie@3.0.3/dist/dexie.mjs',
@@ -12,6 +12,7 @@ const assetsToCache = [
     'app/js/pokemon.js',
     'app/imgs/favicon.ico',
     'app/imgs/icon-256x256.png',
+    'app/imgs/add.png',
     'app/imgs/delete-32x32.png',
     'app/imgs/search.svg',
     'app/imgs/error.svg',
