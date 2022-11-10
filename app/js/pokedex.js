@@ -173,14 +173,14 @@ function createPokemonCard(pokemon, fromPokeApi) {
         footer.classList.add('cursor-default');
         spanDelete.className = `btn-add ${type}`;
         spanDelete.title = `Add ${pokemon[POKE_NAME]} to your pokédex`;
-        spanDelete.addEventListener('click', async () => { await addPokemon(pokemon[POKE_NUMBER], pokemon[POKE_NAME]); });
+        spanDelete.addEventListener('click', async () => { await addPokemon(pokemon); });
         imgDelete.src = 'app/imgs/add.png';
         imgDelete.alt = `Add ${pokemon[POKE_NAME]} to your pokédex`;
         imgDelete.title = `Add ${pokemon[POKE_NAME]} to your pokédex`;
     } else {
         spanDelete.className = `btn-remove ${type}`;
         spanDelete.title = `Remove ${pokemon[POKE_NAME]} from your pokédex`;
-        spanDelete.addEventListener('click', async () => { await removePokemon(pokemon[POKE_NUMBER], pokemon[POKE_NAME]); });
+        spanDelete.addEventListener('click', async () => { await deletePokemon(pokemon); });
         imgDelete.src = 'app/imgs/delete-32x32.png';
         imgDelete.alt = `Remove ${pokemon[POKE_NAME]} from your pokédex`;
         imgDelete.title = `Remove ${pokemon[POKE_NAME]} from your pokédex`;
@@ -239,47 +239,47 @@ async function findPokemon(search) {
     bindPokedex(pokemonsFiltered, fromPokeApi);
 }
 
-async function addPokemon(number, name) {
+async function addPokemon(pokemon) {
 
     cuteAlert({
         type: 'question-add',
-        title: `Adding ${name}`,
-        message: `Are you sure you want to add this cute ${name} to your pokédex?`,
+        title: `Adding ${pokemon[POKE_NAME]}`,
+        message: `Are you sure you want to add this cute ${pokemon[POKE_NAME]} to your pokédex?`,
         img: 'question.svg',
         confirmText: 'YES',
         cancelText: 'NO',
         cancelType: 'error'
     }).then(async (e) => { 
-        if ( e == 'confirm'){
-            //await pokemonDb.delete(POKE_NUMBER, number);
-            //await bindPokedexFromDb();
+        if ( e == 'confirm') {
+            await pokemonDb.add(pokemon);
+            await bindPokedexFromDb();
             cuteToast({
                 type: 'info', // success, info, error, warning
                 title: 'Added successfully',
-                message: `${name} added to your pokédex`
+                message: `${pokemon[POKE_NAME]} added to your pokédex`
             });
         }
     });    
 }
 
-async function removePokemon(number, name) {
+async function deletePokemon(pokemon) {
 
     cuteAlert({
         type: 'question-remove',
-        title: `Removing ${name}`,
-        message: `Are you sure you want to remove this cute ${name} from your pokédex?`,
+        title: `Removing ${pokemon[POKE_NAME]}`,
+        message: `Are you sure you want to remove this cute ${pokemon[POKE_NAME]} from your pokédex?`,
         img: 'question.svg',
         confirmText: 'YES',
         cancelText: 'NO',
         cancelType: 'info'
     }).then(async (e) => { 
-        if ( e == 'confirm'){
-            await pokemonDb.delete(POKE_NUMBER, number);
+        if ( e == 'confirm') {
+            await pokemonDb.delete(POKE_NUMBER, pokemon[POKE_NUMBER]);
             await bindPokedexFromDb();
             cuteToast({
                 type: 'error', // success, info, error, warning
                 title: 'Removed successfully',
-                message: `${name} removed from your pokédex`
+                message: `${pokemon[POKE_NAME]} removed from your pokédex`
             });
         }
     });    
