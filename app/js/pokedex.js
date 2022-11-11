@@ -42,18 +42,35 @@ async function showHideLoading() {
 }
 
 async function fetchPokemonFromNetwork(numberOrName) {
-    const response = await fetch(`${POKE_API}${numberOrName}`);
+    try {
+        const response = await fetch(`${POKE_API}${numberOrName}`);
 
-    if (response.status !== 200) return null;
+        if (response.status !== 200) return null;
+    
+        const pokemon = await response.json();
+        return pokemon;
+    } 
+    catch (e) {
+        cuteToast({
+            type: 'error', // success, info, error, warning
+            title: 'ERROR',
+            message: `Error while searching for pokémon in pokéAPI. Maybe you're offline!`,
+            timer: 500000
+        });
 
-    const pokemon = await response.json();
-    return pokemon;
+        return null;
+    }
 }
 
 async function fetchImageAndReturnAsBlob(imageUrl) {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-    return blob;
+    try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        return blob;
+    }
+    catch (e) {
+        return new Blob(undefined, undefined);
+    }
 }
 
 async function fetchAndStoreFirstGeneration() {
