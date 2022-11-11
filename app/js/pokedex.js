@@ -83,7 +83,7 @@ async function fetchImageAndReturnAsBlob(imageUrl) {
 async function fetchAndStoreFirstGeneration() {
 
     console.log('Bulk adding first generation from network');
-    const numbers = Array.from(new Array(25), (x, i) => i + 1);
+    const numbers = Array.from(new Array(151), (x, i) => i + 1);
     const pokemonsRequests = numbers.map(fetchPokemonFromNetwork);
     const pokemons = await Promise.all(pokemonsRequests);
 
@@ -160,8 +160,12 @@ function bindPokedex(pokemons, fromPokeApi, fromDb) {
 
     if (pokemons && pokemons.length !== 0)
         pokemons.forEach((pokemon) => pokedex.appendChild(createPokemonCard(pokemon, fromPokeApi, false)));
-    else
-        pokedex.appendChild(createPokemonCardNotFound(false));
+    else {
+        if (fromDb)
+            pokedex.appendChild(createEmptyPokedex());
+        else
+            pokedex.appendChild(createPokemonCardNotFound(false));
+    }
 }
 
 async function bindPokedexFromDbOrFromSearch() {
@@ -179,6 +183,25 @@ async function bindPokedexFromDbOrFromSearch() {
         await bindPokedexFromDb();
 }
 
+function createEmptyPokedex() { 
+    const div = document.createElement('div');
+    const img = document.createElement('img');
+    const footer = document.createElement('footer');
+    const span = document.createElement('span');
+    div.className = 'card bd-none';
+    img.className = 'wd-empty cursor-default';
+    img.src = 'app/imgs/pokedex.png';
+    img.alt = 'Empty pokédex';
+    img.title = 'Empty pokédex';
+    footer.className = 'mt-empty empty cursor-default';
+    span.innerHTML = 'Your pokédex is empty.<br/>Try searching for new pokémon and add them.';
+    span.classList.add('ft-sz-18');
+    div.appendChild(img);
+    footer.appendChild(span);
+    div.appendChild(footer);
+    return div;
+}
+
 function createPokemonCardNotFound(addGoBack) {
     const div = document.createElement('div');
     const header = document.createElement('header');
@@ -189,11 +212,13 @@ function createPokemonCardNotFound(addGoBack) {
     div.className = 'card not-found';
     h2.innerText = '#';
     img.src = 'app/imgs/icon-256x256.png';
-    img.alt = 'Missing pokémon';
+    img.alt = 'Not found';
+    img.title = 'Not found';
     img.style = 'padding: 1rem;';
-    footer.className = 'not-found';
+    footer.className = 'not-found cursor-default';
     span.innerText = 'not found in pokédex nor pokéAPI';
     span.classList.add('ft-sz-20');
+    img.classList.add('cursor-default');
 
     if (addGoBack) {
         span.innerText = 'not found in pokédex';

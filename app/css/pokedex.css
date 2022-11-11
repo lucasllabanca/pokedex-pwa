@@ -75,6 +75,14 @@ h1 {
     color: #FFFFFF;
 }
 
+.mt-empty {
+    margin-top: -15px;
+}
+
+.wd-empty {
+    width: 247px !important;
+}
+
 .pokemon {
     display: flex;
     gap: 20px;
@@ -297,6 +305,14 @@ input[type="search"]:focus {
     font-size: 20px !important;
 }
 
+.ft-sz-18 {
+    font-size: 18px !important;
+}
+
+.bd-none {
+    border: none !important;
+}
+
 .normal { color: #A8A77A; background-color: #A8A77A; }
 .normal:hover { color: #cfce91; background-color: #cfce91; }
 
@@ -352,3 +368,4 @@ input[type="search"]:focus {
 .fairy:hover { color: #eb9ac2; background-color: #eb9ac2;}
 
 .not-found { color: gray; background-color: gray; }
+.empty { color: #423a3a; background-color: #423a3a;}
