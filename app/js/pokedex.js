@@ -111,6 +111,7 @@ function reducePokemon(pokemon) {
 }
 
 async function bindPokedexFromDb() {
+    document.getElementById('search').value = '';
     const pokemons = await pokemonDb.getAll();
     bindPokedex(pokemons);
 }
@@ -274,8 +275,22 @@ async function deletePokemon(pokemon) {
         cancelType: 'info'
     }).then(async (e) => { 
         if ( e == 'confirm') {
+
             await pokemonDb.delete(POKE_NUMBER, pokemon[POKE_NUMBER]);
-            await bindPokedexFromDb();
+
+            const search = document.getElementById('search').value;
+
+            if (search.length !== 0) {
+                const pokemonsFiltered = document.getElementsByClassName('card');
+                
+                if (pokemonsFiltered.length > 1)
+                    await findPokemon(search);
+                else
+                    await bindPokedexFromDb();
+            } 
+            else
+                await bindPokedexFromDb();
+
             cuteToast({
                 type: 'error', // success, info, error, warning
                 title: 'Removed successfully',
