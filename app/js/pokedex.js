@@ -103,12 +103,25 @@ async function initPokedex() {
     const dbExists = await checkIfDatabaseExists('pokemonDB');
 
     if (!dbExists)
-        await fetchAndStoreFirstGeneration(); 
+        await fetchAndStoreFirstGeneration();
     else
         initPokemonDb();
 
     await bindPokedexFromDb();
     await showHideLoading();
+
+    if (!dbExists) {
+        cuteAlert({
+            type: 'info',
+            title: 'Welcome!',
+            message: `This first time, the 1º generation of pokémon (151) was added, so you can play around.<br/>
+                      You can search for your pokémon in your pokédex or for any other in pokéAPI.<br/>
+                      You can also remove from pokédex or add from pokéAPI to your pokédex.<br/>
+                      Your pokédex also works offline.`,
+            img: 'info.svg',
+            buttonText: `Let's Go`
+        });
+    }
 }
 
 async function getNewPokemonReduced(pokemon) {
@@ -137,10 +150,10 @@ function reducePokemon(pokemon) {
 async function bindPokedexFromDb() {
     document.getElementById('search').value = '';
     const pokemons = await pokemonDb.getAll();
-    bindPokedex(pokemons);
+    bindPokedex(pokemons, false, true);
 }
 
-function bindPokedex(pokemons, fromPokeApi = false) {
+function bindPokedex(pokemons, fromPokeApi, fromDb) {
 
     const pokedex = document.getElementById('pokedex');
     pokedex.innerHTML = '';
@@ -307,7 +320,7 @@ async function findPokemon(search) {
         }
     }
 
-    bindPokedex(pokemonsFiltered, fromPokeApi);
+    bindPokedex(pokemonsFiltered, fromPokeApi, false);
 }
 
 async function addPokemon(pokemon) {
@@ -323,7 +336,7 @@ async function addPokemon(pokemon) {
     }).then(async (e) => { 
         if ( e == 'confirm') {
             await pokemonDb.add(pokemon);
-            bindPokedex([pokemon]);
+            bindPokedex([pokemon], false, false);
             cuteToast({
                 type: 'info', // success, info, error, warning
                 title: 'ADDED',
