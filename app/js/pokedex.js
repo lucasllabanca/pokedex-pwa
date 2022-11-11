@@ -55,7 +55,7 @@ async function fetchPokemonFromNetwork(numberOrName) {
             type: 'error', // success, info, error, warning
             title: 'ERROR',
             message: `Error while searching for pokémon in pokéAPI. Maybe you're offline!`,
-            timer: 500000
+            timer: 5000
         });
 
         return null;

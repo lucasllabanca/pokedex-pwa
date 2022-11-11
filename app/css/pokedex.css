@@ -84,14 +84,14 @@ h1 {
     height: 400px;
 }
 
-a {
+a, a:link, a:visited, a:active {
     text-decoration: none;
     color: black;
     font-size: 48px;
 }
 
 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
     text-decoration-color: #C22E28;
     color: #C22E28;
 }
