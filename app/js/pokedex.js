@@ -256,8 +256,8 @@ async function addPokemon(pokemon) {
             bindPokedex([pokemon]);
             cuteToast({
                 type: 'info', // success, info, error, warning
-                title: 'Added successfully',
-                message: `${pokemon[POKE_NAME]} added to your pokédex`
+                title: 'ADDED',
+                message: `${pokemon[POKE_NAME]} added to pokédex`
             });
         }
     });    
@@ -293,8 +293,8 @@ async function deletePokemon(pokemon) {
 
             cuteToast({
                 type: 'error', // success, info, error, warning
-                title: 'Removed successfully',
-                message: `${pokemon[POKE_NAME]} removed from your pokédex`
+                title: 'REMOVED',
+                message: `${pokemon[POKE_NAME]} removed from pokédex`
             });
         }
     });    

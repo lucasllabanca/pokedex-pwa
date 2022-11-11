@@ -225,12 +225,12 @@
   
   .toast-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     top: 15px;
     position: fixed;
     z-index: 999999;
     justify-content: center;
-    width: 100%;
+    width: 340px;
     left: 50%;
     transform: translate(-50%, 0);
   }
