@@ -1,19 +1,18 @@
-const STATIC_ASSETS_KEY = 'app-pokedex-v15';
+const STATIC_ASSETS_KEY = 'app-pokedex-v16';
 
 const assetsToCache = [
     'https://cdn.jsdelivr.net/npm/dexie@3.0.3/dist/dexie.mjs',
     'app/fonts/Poppins/Poppins-Regular.ttf',
     'app/css/alert.css',
     'app/css/pokedex.css',
-    'app/css/pokemon.css',
     'app/js/alert.js',
     'app/js/indexeddb.js',
     'app/js/pokedex.js',
-    'app/js/pokemon.js',
     'app/imgs/favicon.ico',
     'app/imgs/icon-256x256.png',
     'app/imgs/add.png',
     'app/imgs/delete-32x32.png',
+    'app/imgs/back-32x32.png',
     'app/imgs/search.svg',
     'app/imgs/error.svg',
     'app/imgs/info.svg',

@@ -34,6 +34,13 @@ async function rotatePokeball() {
     }
 }
 
+function showHidePokedexPokemon() {
+    const pokemon = document.getElementById('pokemon');
+    const content = document.getElementById('content');
+    pokemon.style.display = pokemon.style.display === 'none' ? '' : 'none';
+    content.style.display = pokemon.style.display === 'none' ? '' : 'none';
+}
+
 async function showHideLoading() {
     const content = document.getElementById('content');
     const loading = document.getElementById('loading');
@@ -139,12 +146,27 @@ function bindPokedex(pokemons, fromPokeApi = false) {
     pokedex.innerHTML = '';
 
     if (pokemons && pokemons.length !== 0)
-        pokemons.forEach((pokemon) => pokedex.appendChild(createPokemonCard(pokemon, fromPokeApi)));
+        pokemons.forEach((pokemon) => pokedex.appendChild(createPokemonCard(pokemon, fromPokeApi, false)));
     else
-        pokedex.appendChild(createPokemonCardNotFound());
+        pokedex.appendChild(createPokemonCardNotFound(false));
 }
 
-function createPokemonCardNotFound() {
+async function bindPokedexFromDbOrFromSearch() {
+    const search = document.getElementById('search').value;
+
+    if (search.length !== 0) {
+        const pokemonsFiltered = document.getElementsByClassName('card');
+        
+        if (pokemonsFiltered.length > 1)
+            await findPokemon(search);
+        else
+            await bindPokedexFromDb();
+    } 
+    else
+        await bindPokedexFromDb();
+}
+
+function createPokemonCardNotFound(addGoBack) {
     const div = document.createElement('div');
     const header = document.createElement('header');
     const footer = document.createElement('footer');
@@ -159,6 +181,21 @@ function createPokemonCardNotFound() {
     footer.className = 'not-found';
     span.innerText = 'not found in pokédex nor pokéAPI';
     span.classList.add('ft-sz-20');
+
+    if (addGoBack) {
+        span.innerText = 'not found in pokédex';
+        const spanAcao = document.createElement('span');
+        const imgAcao = document.createElement('img');
+        spanAcao.className = 'btn-back not-found';
+        spanAcao.title = 'Go back to pokédex';
+        spanAcao.addEventListener('click', () => { showHidePokedexPokemon(); });
+        imgAcao.src = 'app/imgs/back-32x32.png';
+        imgAcao.alt = 'Go back to pokédex';
+        imgAcao.title = 'Go back to pokédex';
+        spanAcao.appendChild(imgAcao);
+        header.appendChild(spanAcao);
+    }
+
     header.appendChild(h2);
     footer.appendChild(span);
     div.appendChild(header);
@@ -167,45 +204,61 @@ function createPokemonCardNotFound() {
     return div;
 }
 
-function createPokemonCard(pokemon, fromPokeApi) {
+function createPokemonCard(pokemon, fromPokeApi, addGoBack) {
     const div = document.createElement('div');
     const header = document.createElement('header');
     const footer = document.createElement('footer');
     const h2 = document.createElement('h2');
     const img = document.createElement('img');
     const span = document.createElement('span');
-    const spanDelete = document.createElement('span');
-    const imgDelete = document.createElement('img');
+    const spanAcao = document.createElement('span');
+    const imgAcao = document.createElement('img');
     const type = pokemon.data.types[0].type.name;
     div.className = `card ${type}`;
-    //div.setAttribute("onclick",`abrirStripes(${number});`);
     h2.innerText = `#${pokemon[POKE_NUMBER]}`;
     img.src = URL.createObjectURL(pokemon[POKE_IMG]);
     img.alt = pokemon[POKE_NAME];
     img.title = pokemon[POKE_NAME];
     footer.className = type;
     span.innerText = pokemon[POKE_NAME];
-    
-    if (fromPokeApi) {
+
+    if (fromPokeApi || addGoBack) {
         img.classList.add('cursor-default');
         footer.classList.add('cursor-default');
-        spanDelete.className = `btn-add ${type}`;
-        spanDelete.title = `Add ${pokemon[POKE_NAME]} to your pokédex`;
-        spanDelete.addEventListener('click', async () => { await addPokemon(pokemon); });
-        imgDelete.src = 'app/imgs/add.png';
-        imgDelete.alt = `Add ${pokemon[POKE_NAME]} to your pokédex`;
-        imgDelete.title = `Add ${pokemon[POKE_NAME]} to your pokédex`;
+    }
+    
+    if (fromPokeApi) {
+
+        spanAcao.className = `btn-add ${type}`;
+        spanAcao.title = `Add ${pokemon[POKE_NAME]} to your pokédex`;
+        spanAcao.addEventListener('click', async () => { await addPokemon(pokemon); });
+        imgAcao.src = 'app/imgs/add.png';
+        imgAcao.alt = `Add ${pokemon[POKE_NAME]} to your pokédex`;
+        imgAcao.title = `Add ${pokemon[POKE_NAME]} to your pokédex`;
+        
     } else {
-        spanDelete.className = `btn-remove ${type}`;
-        spanDelete.title = `Remove ${pokemon[POKE_NAME]} from your pokédex`;
-        spanDelete.addEventListener('click', async () => { await deletePokemon(pokemon); });
-        imgDelete.src = 'app/imgs/delete-32x32.png';
-        imgDelete.alt = `Remove ${pokemon[POKE_NAME]} from your pokédex`;
-        imgDelete.title = `Remove ${pokemon[POKE_NAME]} from your pokédex`;
+
+        if (addGoBack) {
+            spanAcao.className = `btn-back ${type}`;
+            spanAcao.title = 'Go back to pokédex';
+            spanAcao.addEventListener('click', () => { showHidePokedexPokemon(); });
+            imgAcao.src = 'app/imgs/back-32x32.png';
+            imgAcao.alt = 'Go back to pokédex';
+            imgAcao.title = 'Go back to pokédex';
+        } else {
+            img.addEventListener('click', () => { openPokemon(pokemon); });
+            footer.addEventListener('click', () => { openPokemon(pokemon); });
+            spanAcao.className = `btn-remove ${type}`;
+            spanAcao.title = `Remove ${pokemon[POKE_NAME]} from your pokédex`;
+            spanAcao.addEventListener('click', async () => { await deletePokemon(pokemon); });
+            imgAcao.src = 'app/imgs/delete-32x32.png';
+            imgAcao.alt = `Remove ${pokemon[POKE_NAME]} from your pokédex`;
+            imgAcao.title = `Remove ${pokemon[POKE_NAME]} from your pokédex`;
+        }
     }
 
-    spanDelete.appendChild(imgDelete);
-    header.appendChild(spanDelete);
+    spanAcao.appendChild(imgAcao);
+    header.appendChild(spanAcao);
     header.appendChild(h2);
     footer.appendChild(span);
     div.appendChild(header);
@@ -292,22 +345,8 @@ async function deletePokemon(pokemon) {
         cancelType: 'info'
     }).then(async (e) => { 
         if ( e == 'confirm') {
-
             await pokemonDb.delete(POKE_NUMBER, pokemon[POKE_NUMBER]);
-
-            const search = document.getElementById('search').value;
-
-            if (search.length !== 0) {
-                const pokemonsFiltered = document.getElementsByClassName('card');
-                
-                if (pokemonsFiltered.length > 1)
-                    await findPokemon(search);
-                else
-                    await bindPokedexFromDb();
-            } 
-            else
-                await bindPokedexFromDb();
-
+            await bindPokedexFromDbOrFromSearch();
             cuteToast({
                 type: 'error', // success, info, error, warning
                 title: 'REMOVED',
@@ -315,6 +354,21 @@ async function deletePokemon(pokemon) {
             });
         }
     });    
+}
+
+function bindPokemon(pokemon) {
+    const pokemonDiv = document.getElementById('pokemon');
+    pokemonDiv.innerHTML = '';
+
+    if (pokemon)
+        pokemonDiv.appendChild(createPokemonCard(pokemon, false, true));
+    else
+        pokemonDiv.appendChild(createPokemonCardNotFound(true));
+}
+
+function openPokemon(pokemon) {
+    bindPokemon(pokemon);
+    showHidePokedexPokemon();
 }
 
 function registerServiceWorker() {
