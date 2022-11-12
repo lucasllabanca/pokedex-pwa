@@ -313,6 +313,20 @@ input[type="search"]:focus {
     border: none !important;
 }
 
+.span-property {
+    border-top: white solid 2px;
+    margin: 6px 20px 10px 6px;
+}
+
+.lbl-property {
+    color: white;
+    margin-left: 20px;
+}
+
+.pd-bt-20 {
+    padding-bottom: 20px;
+}
+
 .normal { color: #A8A77A; background-color: #A8A77A; }
 .normal:hover { color: #cfce91; background-color: #cfce91; }
 

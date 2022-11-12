@@ -299,10 +299,40 @@ function createPokemonCard(pokemon, fromPokeApi, addGoBack) {
     header.appendChild(spanAcao);
     header.appendChild(h2);
     footer.appendChild(span);
+
+    if (addGoBack) {
+        footer.innerHTML += getPokemonDetails(pokemon);
+        footer.classList.add('pd-bt-20');
+    }
+
     div.appendChild(header);
     div.appendChild(img);
     div.appendChild(footer);
     return div;
+}
+
+function getPokemonDetails(pokemon) {
+
+    var details = `<span class="span-property"></span>
+                   <label class="lbl-property"><b>height:</b> ${pokemon.data.height}</label>
+                   <span class="span-property"></span>
+                   <label class="lbl-property"><b>weight:</b> ${pokemon.data.weight}</label>`;
+    
+    if (pokemon.data.stats && pokemon.data.stats.length > 0) {
+        pokemon.data.stats.forEach((stat) => {
+            details += `<span class="span-property"></span>
+                        <label class="lbl-property"><b>${stat.stat.name}:</b> ${stat.base_stat}</label>`;
+        });
+    }
+
+    if (pokemon.data.types && pokemon.data.types.length > 0) {
+        details += '<span class="span-property"></span>';
+        details += '<label class="lbl-property"><b>type(s):';
+        pokemon.data.types.forEach((type) => details += ` ${type.type.name}`);
+        details += '</label>';
+    }
+    
+    return details;
 }
 
 function isNumeric(value) {
@@ -345,7 +375,7 @@ async function findPokemon(search) {
         }
     }
 
-    bindPokedex(pokemonsFiltered, fromPokeApi, false);
+    bindPokedex(pokemonsFiltered, fromPokeApi, search.length === 0);
 }
 
 async function addPokemon(pokemon) {
