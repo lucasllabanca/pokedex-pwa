@@ -327,7 +327,7 @@ function getPokemonDetails(pokemon) {
 
     if (pokemon.data.types && pokemon.data.types.length > 0) {
         details += '<span class="span-property"></span>';
-        details += '<label class="lbl-property"><b>type(s):';
+        details += '<label class="lbl-property"><b>type(s):</b>';
         pokemon.data.types.forEach((type) => details += ` ${type.type.name}`);
         details += '</label>';
     }
